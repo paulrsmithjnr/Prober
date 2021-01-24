@@ -1,0 +1,17 @@
+{
+    "manifest_version": 2,
+    "name": "Prober",
+    "description": "Easily download Blackboard Collaborate recordings.",
+    "version": "1.0",
+    "icons": {
+        "16": "./img/icons/prober_colour-16x16.png",
+        "32": "./img/icons/prober_colour-32x32.png",
+        "64": "./img/icons/prober_colour-64x64.png",
+        "128": "./img/icons/prober_colour-128x128.png"
+    },
+    "browser_action": {
+        "default_icon": "./img/icons/prober_colour.png",
+        "default_popup": "./html/popup.html"
+    },
+    "permissions": ["activeTab"]
+}

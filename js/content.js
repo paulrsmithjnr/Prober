@@ -14,9 +14,9 @@ var observer = new MutationObserver(function(mutations) {
                 console.log("Video found!");
                 observer.disconnect();
                 const videoRec = document.getElementById("playback-video-playback-video_html5_api");
-                // chrome.runtime.sendMessage({
-                //     video: videoRec
-                // });
+                chrome.runtime.sendMessage({
+                    video: videoRec
+                });
                 console.log(videoRec);
             }
         }

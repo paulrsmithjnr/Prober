@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
-    //     const video = request.videoRec;
-    //     document.getElementById("textContent").innerHTML = "BbC recording found!";
-    //     console.log("Actually found the video");
-    //     console.log(video);
-    // });
+    chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
+        const video = request.video;
+        document.getElementById("textContent").innerHTML = "BbC recording found!";
+        console.log("Actually found the video");
+        console.log(video);
+    });
     // document.getElementById("text").innerHTML = "BbC recording found!";
     // document.getElementById("modal-button").innerHTML = "<button id=\"download\">Download</button>";
 

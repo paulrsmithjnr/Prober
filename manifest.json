@@ -16,7 +16,7 @@
     },
     "content_scripts": [
         {
-            "matches": ["https://ca.bbcollab.com/collab/ui/session/playback"],
+            "matches": ["*://*.bbcollab.com/*"],
             "js": ["./js/content.js"]
         }
     ],

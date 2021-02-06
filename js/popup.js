@@ -1,5 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
+    var video = null;
+    chrome.storage.local.get(['video'], function(result) {
+        // console.log(result.video);
+        video = result.video;
+        console.log(video);
+
+        if (video != null) {
+            document.getElementById("textContent").innerText = "Title: " + video.title;
+            document.getElementById("modal-button").innerHTML = "<button id=\"download\">Download Now</button>";
+            document.getElementById("download").addEventListener('click', onDownload, false);
+        }
+
+    });
+
+    function onDownload() {
+        var options = {
+            url: video.source,
+            filename: video.title + ".mp4",
+            saveAs: true
+        }
+        chrome.downloads.download(options);
+        chrome.storage.local.remove('video');
+    }
     // chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
     //     const video = request.video;
     //     document.getElementById("textContent").innerHTML = "BbC recording found!";

@@ -25,6 +25,8 @@
     },
     "permissions": [
         "tabs",
+        "downloads",
+        "storage",
         "https://ca.bbcollab.com/collab/ui/session/playback"
     ]
 }

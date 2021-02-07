@@ -121,26 +121,43 @@ document.addEventListener('DOMContentLoaded', function() {
     // }
 
     function addClickListeners(num) {
+        //adding a listerner to each download button
         for(var j = 0; j < num; j++) {
             var downloadID = "downloadBtn-" + j
-            console.log(document.getElementById(downloadID));
+            // console.log(document.getElementById(downloadID));
             document.getElementById(downloadID).addEventListener("click", function() {
-                j--;
+                j--; //for some reason j was incrementing too early
+
+                //gets the videos in storage
                 chrome.storage.local.get(['videos'], function(result) {
                     // console.log(isEmptyObject(result));
                     // console.log(result);
                     if(!isEmptyObject(result)) {
                         videos = result.videos;
-                        var download = videos[j];
-                        console.log("i", j);
-                        console.log("download", download);
+                        var download = videos[j];//video to download
+                        // console.log("i", j);
+                        // console.log("download", download);
+                        console.log("Before download: ", download);
                         var options = {
                             url: download.source,
                             filename: download.title + ".mp4",
                             saveAs: true
                         }
                         chrome.downloads.download(options);
-        
+
+                        download['downloaded'] = true; //change status to already downloaded
+                        videos[j] = download; //reassigns that video in storage in order to update it
+                        
+                        console.log("After download: ", download);
+
+                        //updates videos in storage
+                        chrome.storage.local.set({ 
+                            'videos': videos
+                        }, function() {
+                            console.log("Videos object successfully updated and stored to local storage!");
+                        });
+                        getVideos();
+                        
                         // updateDownload(download);
                     }
                 });

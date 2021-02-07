@@ -1,7 +1,8 @@
 html, body {
     font-size: 14px;
     height:fit-content;
-    width: 400px;
+    width: 600px;
+    height: 200px;
 }
 
 h1 {
@@ -41,3 +42,17 @@ img {
 #contentDiv {
     padding: 20px;
 }
+
+.download-itemTitle {
+    font-size: small;
+    vertical-align: text-bottom;
+}
+
+.download-item {
+    padding: 10px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 65% 35%;
+    border-bottom: 1px rgb(224, 224, 224) solid ;
+}
+

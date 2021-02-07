@@ -41,7 +41,8 @@ var observer = new MutationObserver(function(mutations) {
                 chrome.storage.local.set({ 
                     'video': {
                         'title': title,
-                        'source': source
+                        'source': source,
+                        'downloaded': false
                     }
                 }, function() {
                     console.log("Video found and successfully stored for download!");

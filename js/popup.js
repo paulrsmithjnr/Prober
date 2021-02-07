@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if(video != null) {
             addVideo();
         }
+
+        getVideos();
         // console.log(video);
 
         // if (video != null) {
@@ -25,7 +27,30 @@ document.addEventListener('DOMContentLoaded', function() {
             if (Object.keys(result).length === 0 && result.constructor === Object) {
                 createVideosObject();
             } else {
-                console.log("Videos:", result);
+                console.log("Videos:", result.videos);
+                var videos = result.videos;
+                var currentVideosArray = Object.entries(videos);
+
+                console.log("Length: ", currentVideosArray.length);
+                console.log("Entries: ", currentVideosArray);
+
+                for (var i = 0; i < currentVideosArray.length; i++) {
+
+                    var vidTitle = currentVideosArray[i][1].title
+                    if (vidTitle.localeCompare(video.title) === 0) {
+                        console.log("Video already saved");
+                        return;
+                    }
+
+                }
+                
+
+                videos[Object.entries(videos).length] = video;
+                chrome.storage.local.set({ 
+                    'videos': videos
+                }, function() {
+                    console.log("Videos object successfully updated and stored to local storage!");
+                });
             }
 
         });
@@ -39,6 +64,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }, function() {
             console.log("Videos object successfully created and stored to local storage!");
         });
+    }
+
+    function getVideos() {
+        chrome.storage.local.get(['videos'], function(result) {
+            
+            videos = Object.entries(result.videos);
+            var innerhtml = "";
+            for(var i = videos.length - 1; i >= 0; i--) {
+                innerhtml = innerhtml + "<div class=\"download-item\">" +
+                                            "<div class=\"download-itemTitle\">" + videos[i][1].title + "</div>" +
+                                            "<div class=\"download-itemBtns\"><button class=\"btn btn-success\">Download</button> <button class=\"btn btn-danger\">Remove</button></div>" +
+                                        "</div>";
+            }
+            document.getElementById("contentDiv").innerHTML = innerhtml;
+            // console.log("Get videos: ", currentVideosArray);
+            // return currentVideosArray;
+        });
+        // console.log("Get videos: ", currentVideosArray);
+        // return currentVideosArray;
     }
 
     function onDownload() {

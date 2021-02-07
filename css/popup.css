@@ -1,8 +1,7 @@
 html, body {
     font-size: 14px;
-    height:fit-content;
     width: 600px;
-    height: 200px;
+    height: fit-content;
 }
 
 h1 {
@@ -41,6 +40,9 @@ img {
 
 #contentDiv {
     padding: 20px;
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .download-itemTitle {

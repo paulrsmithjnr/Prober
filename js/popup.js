@@ -3,15 +3,43 @@ document.addEventListener('DOMContentLoaded', function() {
     chrome.storage.local.get(['video'], function(result) {
         // console.log(result.video);
         video = result.video;
-        console.log(video);
-
-        if (video != null) {
-            document.getElementById("textContent").innerText = "Title: " + video.title;
-            document.getElementById("modal-button").innerHTML = "<button id=\"download\">Download Now</button>";
-            document.getElementById("download").addEventListener('click', onDownload, false);
+        if(video != null) {
+            addVideo();
         }
+        // console.log(video);
+
+        // if (video != null) {
+        //     document.getElementById("textContent").innerText = "Title: " + video.title;
+        //     document.getElementById("modal-button").innerHTML = "<button id=\"download\">Download Now</button>";
+        //     document.getElementById("download").addEventListener('click', onDownload, false);
+        // }
 
     });
+
+    function addVideo() {
+        chrome.storage.local.get(['videos'], function(result) {
+            // console.log(Object.keys(result).length);
+            // console.log(result.constructor);
+            // console.log(Object.keys(result).length === 0 && result.constructor === Object);
+
+            if (Object.keys(result).length === 0 && result.constructor === Object) {
+                createVideosObject();
+            } else {
+                console.log("Videos:", result);
+            }
+
+        });
+    }
+
+    function createVideosObject() {
+        var videos = new Object();
+        videos[0] = video;
+        chrome.storage.local.set({ 
+            'videos': videos
+        }, function() {
+            console.log("Videos object successfully created and stored to local storage!");
+        });
+    }
 
     function onDownload() {
         var options = {

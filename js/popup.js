@@ -82,25 +82,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 videoObjects = result.videos;
 
                 var contentDiv = document.getElementById("contentDiv");
+                contentDiv.innerHTML = "";
                 for(var i = videos.length - 1; i >= 0; i--) {
                     // innerhtml = innerhtml + "<div class=\"download-item\">" +
                     //                             "<div class=\"download-itemTitle\">" + videos[i][1].title + "</div>" +
                     //                             "<div class=\"download-itemBtns\"><button id=\"downloadBtn-"+i+"\" class=\"btn btn-success\">Download</button> <button id=\"removeBtn-"+i+"\" class=\"btn btn-danger\">Remove</button></div>" +
                     //                         "</div>";
+
+
+                    console.log(videos[i][1].downloaded);
+                    
+                    var downloadItemTitle = document.createElement("div");
+                    var downloadBtn = document.createElement("button");
+                    if(videos[i][1].downloaded) {
+                        downloadItemTitle.classList.add("download-itemTitle");
+                        downloadBtn.classList.add("btn", "btn-primary");
+                        downloadBtn.innerText = "Download Again";
+                    } else {
+                        downloadItemTitle.classList.add("download-itemTitle", "bold");
+                        downloadBtn.classList.add("btn", "btn-success");
+                        downloadBtn.innerText = "Download";
+                    }
+                    downloadItemTitle.innerText = videos[i][1].title;
+
                     var downloadItem = document.createElement("div");
                     downloadItem.classList.add("download-item");
 
-                    var downloadItemTitle = document.createElement("div");
-                    downloadItemTitle.classList.add("download-itemTitle");
-                    downloadItemTitle.innerText = videos[i][1].title;
+                    // var downloadItemTitle = document.createElement("div");
+                    // downloadItemTitle.classList.add("download-itemTitle");
+                    // downloadItemTitle.innerText = videos[i][1].title;
 
                     var downloadItemBtns = document.createElement("div");
                     downloadItemBtns.classList.add("download-itemBtns");
                     
-                    var downloadBtn = document.createElement("button");
+                    // var downloadBtn = document.createElement("button");
                     downloadBtn.id = "downloadBtn" + i;
-                    downloadBtn.classList.add("btn", "btn-success");
-                    downloadBtn.innerText = "Download";
+                    // downloadBtn.classList.add("btn", "btn-success");
+                    // downloadBtn.innerText = "Download";
 
                     downloadBtn.addEventListener("click", function(e) {
                         // console.log("index", index);

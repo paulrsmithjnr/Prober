@@ -48,8 +48,12 @@ img {
 .download-itemTitle {
     font-size: small;
     height: fit-content;
-    width: 307px;
+    width: 280px;
     /* vertical-align: text-bottom; */
+}
+
+.bold {
+    font-weight: bold;
 }
 
 .download-item {

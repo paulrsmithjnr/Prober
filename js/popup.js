@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, function() {
                     console.log("Videos object successfully updated and stored to local storage!");
                 });
-                getVideos();
             }
         });
     }
@@ -80,15 +79,75 @@ document.addEventListener('DOMContentLoaded', function() {
             // console.log(result);
             if(!isEmptyObject(result)) {
                 videos = Object.entries(result.videos);
-                var innerhtml = "";
+                videoObjects = result.videos;
+
+                var contentDiv = document.getElementById("contentDiv");
                 for(var i = videos.length - 1; i >= 0; i--) {
-                    innerhtml = innerhtml + "<div class=\"download-item\">" +
-                                                "<div class=\"download-itemTitle\">" + videos[i][1].title + "</div>" +
-                                                "<div class=\"download-itemBtns\"><button id=\"downloadBtn-"+i+"\" class=\"btn btn-success\">Download</button> <button id=\"removeBtn-"+i+"\" class=\"btn btn-danger\">Remove</button></div>" +
-                                            "</div>";
+                    // innerhtml = innerhtml + "<div class=\"download-item\">" +
+                    //                             "<div class=\"download-itemTitle\">" + videos[i][1].title + "</div>" +
+                    //                             "<div class=\"download-itemBtns\"><button id=\"downloadBtn-"+i+"\" class=\"btn btn-success\">Download</button> <button id=\"removeBtn-"+i+"\" class=\"btn btn-danger\">Remove</button></div>" +
+                    //                         "</div>";
+                    var downloadItem = document.createElement("div");
+                    downloadItem.classList.add("download-item");
+
+                    var downloadItemTitle = document.createElement("div");
+                    downloadItemTitle.classList.add("download-itemTitle");
+                    downloadItemTitle.innerText = videos[i][1].title;
+
+                    var downloadItemBtns = document.createElement("div");
+                    downloadItemBtns.classList.add("download-itemBtns");
+                    
+                    var downloadBtn = document.createElement("button");
+                    downloadBtn.id = "downloadBtn" + i;
+                    downloadBtn.classList.add("btn", "btn-success");
+                    downloadBtn.innerText = "Download";
+
+                    downloadBtn.addEventListener("click", function(e) {
+                        // console.log("index", index);
+                        // console.log(isEmptyObject(result));
+                        // console.log(result);
+                        // console.log("Here: ", e.target.id);
+                        var downloadButtonID = e.target.id;
+                        var index = parseInt(downloadButtonID[downloadButtonID.length - 1]);
+                        // console.log("Download videos: ", videoObjects);
+                        var download = videoObjects[index];//video to download
+                        // console.log("download", download);
+                        // console.log("Before download: ", download);
+                        var options = {
+                            url: download.source,
+                            filename: download.title + ".mp4",
+                            saveAs: true
+                        }
+                        chrome.downloads.download(options);
+
+                        download['downloaded'] = true; //change status to already downloaded
+                        videoObjects[index] = download; //reassigns that video in storage in order to update it
+                        
+                        // console.log("After download: ", download);
+
+                        //updates videos in storage
+                        chrome.storage.local.set({ 
+                            'videos': videoObjects
+                        }, function() {
+                            console.log("Videos object successfully updated and stored to local storage!");
+                        });                                
+                    });
+
+                    var removeBtn = document.createElement("button");
+                    removeBtn.id = "removeBtn" + i;
+                    removeBtn.classList.add("btn", "btn-danger");
+                    removeBtn.innerText = "Remove";
+
+                    downloadItemBtns.appendChild(downloadBtn);
+                    downloadItemBtns.appendChild(removeBtn);
+                    
+                    downloadItem.appendChild(downloadItemTitle);
+                    downloadItem.appendChild(downloadItemBtns);
+
+                    contentDiv.appendChild(downloadItem);
                 }
-                document.getElementById("contentDiv").innerHTML = innerhtml;
-                addClickListeners(videos.length);
+                // document.getElementById("contentDiv").innerHTML = innerhtml;
+                // addClickListeners(videos.length);
             // console.log("Get videos: ", currentVideosArray);
             // return currentVideosArray;
             } else {
@@ -99,26 +158,26 @@ document.addEventListener('DOMContentLoaded', function() {
         // return currentVideosArray;
     }
 
-    // function onDownload(id) {
-    //     chrome.storage.local.get(['videos'], function(result) {
-    //         // console.log(isEmptyObject(result));
-    //         // console.log(result);
-    //         if(!isEmptyObject(result)) {
-    //             videos = result.videos;
-    //             var download = videos[id];
-    //             var options = {
-    //                 url: download.source,
-    //                 filename: download.title + ".mp4",
-    //                 saveAs: true
-    //             }
-    //             chrome.downloads.download(options);
+    function onDownload(id) {
+        chrome.storage.local.get(['videos'], function(result) {
+            // console.log(isEmptyObject(result));
+            // console.log(result);
+            if(!isEmptyObject(result)) {
+                videos = result.videos;
+                var download = videos[id];
+                var options = {
+                    url: download.source,
+                    filename: download.title + ".mp4",
+                    saveAs: true
+                }
+                chrome.downloads.download(options);
 
-    //             // updateDownload(download);
-    //         }
-    //     });
+                // updateDownload(download);
+            }
+        });
         
         // chrome.storage.local.remove('video');
-    // }
+    }
 
     function addClickListeners(num) {
         //adding a listerner to each download button
@@ -129,38 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 j--; //for some reason j was incrementing too early
 
                 //gets the videos in storage
-                chrome.storage.local.get(['videos'], function(result) {
-                    // console.log(isEmptyObject(result));
-                    // console.log(result);
-                    if(!isEmptyObject(result)) {
-                        videos = result.videos;
-                        var download = videos[j];//video to download
-                        // console.log("i", j);
-                        // console.log("download", download);
-                        console.log("Before download: ", download);
-                        var options = {
-                            url: download.source,
-                            filename: download.title + ".mp4",
-                            saveAs: true
-                        }
-                        chrome.downloads.download(options);
-
-                        download['downloaded'] = true; //change status to already downloaded
-                        videos[j] = download; //reassigns that video in storage in order to update it
-                        
-                        console.log("After download: ", download);
-
-                        //updates videos in storage
-                        chrome.storage.local.set({ 
-                            'videos': videos
-                        }, function() {
-                            console.log("Videos object successfully updated and stored to local storage!");
-                        });
-                        getVideos();
-                        
-                        // updateDownload(download);
-                    }
-                });
+                
             });
         }
     }

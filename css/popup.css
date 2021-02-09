@@ -47,14 +47,29 @@ img {
 
 .download-itemTitle {
     font-size: small;
-    vertical-align: text-bottom;
+    height: fit-content;
+    width: 307px;
+    /* vertical-align: text-bottom; */
 }
 
 .download-item {
-    padding: 10px;
+    padding: 20px;
     width: 100%;
-    display: grid;
-    grid-template-columns: 65% 35%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    /* display: grid;
+    grid-template-columns: 65% 35%; */
     border-bottom: 1px rgb(224, 224, 224) solid ;
+}
+
+.download-itemBtns {
+    position: absolute;
+    right: 20px;
+}
+
+.btn {
+    margin: 2px;
+    
 }
 

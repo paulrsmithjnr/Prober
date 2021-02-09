@@ -1,27 +1,48 @@
+//TODO: Work on PiP functionality. Can maybe send a message from popup script to 
+//content script with a boolean value or some other way of requesting pip.
 document.addEventListener('DOMContentLoaded', function() {
     var video = null;
     var timerId = null;
     var timerCount = 0;
     // chrome.storage.local.remove('videos');
     // chrome.storage.local.remove('video');
-    chrome.storage.local.get(['video'], function(result) {
-        // console.log(result.video);
-        video = result.video;
-        if(!isEmptyObject(result)) {
-            addVideo();
+    document.getElementById("pip").onclick = onPiP;
+    var downloadsTab = document.getElementById("downloads");
+    var firstLoad = true;
+    downloadsTab.classList.add("active");
+    downloadsTab.onclick = onDownloads;
+
+    onDownloads();
+
+
+    function onDownloads() {
+        if (downloadsTab.classList.contains("active") && !firstLoad) {
+            return;
+        } else {
+            firstLoad = false;
+            var contentDiv = document.createElement("div");
+            contentDiv.id = "contentDiv";
+            document.getElementsByClassName("mymodal-content")[0].appendChild(contentDiv);
+            document.getElementById("downloads").classList.add("active");
+            document.getElementById("pip").classList.remove("active");
+            chrome.storage.local.get(['video'], function(result) {
+                // console.log(result.video);
+                video = result.video;
+                if(!isEmptyObject(result)) {
+                    addVideo();
+                }
+        
+                timerId = setInterval(getVideos, 500);
+        
+            });
         }
+    }
 
-        timerId = setInterval(getVideos, 500);
-        // getVideos();
-        // console.log(video);
-
-        // if (video != null) {
-        //     document.getElementById("textContent").innerText = "Title: " + video.title;
-        //     document.getElementById("modal-button").innerHTML = "<button id=\"download\">Download Now</button>";
-        //     document.getElementById("download").addEventListener('click', onDownload, false);
-        // }
-
-    });
+    function onPiP() {
+        document.getElementById("contentDiv").remove();
+        document.getElementById("downloads").classList.remove("active");
+        document.getElementById("pip").classList.add("active");
+    }
 
     function isEmptyObject(object) {
         return (Object.keys(object).length === 0 && object.constructor === Object) || (object === null);
@@ -78,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getVideos() {
         timerCount++;
-        if (timerCount > 3) {
+        if (timerCount > 2) {
             clearInterval(timerId);
         }
         chrome.storage.local.get(['videos'], function(result) {
@@ -193,9 +214,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                             }
                         } else {
-                            chrome.storage.local.remove('video');
                             chrome.storage.local.remove('videos');
                         }
+
+                        chrome.storage.local.remove('video');
                         
                         //updates videos in storage
                         chrome.storage.local.set({ 

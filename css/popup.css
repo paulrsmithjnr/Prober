@@ -45,6 +45,13 @@ img {
     overflow-y: auto;
 }
 
+#pipDiv {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .download-itemTitle {
     font-size: small;
     height: fit-content;

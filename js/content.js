@@ -78,3 +78,11 @@ if (videoRec === null || videoRec === undefined) {
         console.log("Video found and successfully stored for download!");
     });
 }
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
+    const pip = request.pip;
+    if(pip) {
+        document.getElementById(videoSelector).requestPictureInPicture();
+        console.log("PIP Request Sent");
+    }
+});

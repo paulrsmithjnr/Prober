@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
             firstLoad = false;
             var contentDiv = document.createElement("div");
             contentDiv.id = "contentDiv";
+            var pipDiv = document.getElementById("pipDiv");
+            if (pipDiv != null || pipDiv != undefined) {
+                pipDiv.remove();
+            }
             document.getElementsByClassName("mymodal-content")[0].appendChild(contentDiv);
             document.getElementById("downloads").classList.add("active");
             document.getElementById("pip").classList.remove("active");
@@ -42,6 +46,26 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("contentDiv").remove();
         document.getElementById("downloads").classList.remove("active");
         document.getElementById("pip").classList.add("active");
+        var pipDiv = document.createElement("div");
+        pipDiv.id = "pipDiv";
+
+        var pipBtn = document.createElement("button");
+        pipBtn.classList.add("btn", "btn-primary");
+        pipBtn.innerText = "Enter Picture-in-Picture Mode";
+
+        pipBtn.addEventListener("click", function(e) {
+            chrome.runtime.sendMessage({
+                "pip": true
+            });
+            e.target.innerText = "Leave Picture-in-Picture Mode";
+        });
+
+        pipDiv.appendChild(pipBtn);
+
+        document.getElementsByClassName("mymodal-content")[0].appendChild(pipDiv);
+
+
+
     }
 
     function isEmptyObject(object) {

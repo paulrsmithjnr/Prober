@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     var video = null;
+    var timerId = null;
+    var timerCount = 0;
     // chrome.storage.local.remove('videos');
     // chrome.storage.local.remove('video');
     chrome.storage.local.get(['video'], function(result) {
@@ -9,7 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
             addVideo();
         }
 
-        getVideos();
+        timerId = setInterval(getVideos, 500);
+        // getVideos();
         // console.log(video);
 
         // if (video != null) {
@@ -21,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function isEmptyObject(object) {
-        return Object.keys(object).length === 0 && object.constructor === Object;
+        return (Object.keys(object).length === 0 && object.constructor === Object) || (object === null);
     }
 
     function addVideo() {
@@ -74,6 +77,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getVideos() {
+        timerCount++;
+        if (timerCount > 3) {
+            clearInterval(timerId);
+        }
         chrome.storage.local.get(['videos'], function(result) {
             // console.log(isEmptyObject(result));
             // console.log(result);
@@ -82,7 +89,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 videoObjects = result.videos;
 
                 var contentDiv = document.getElementById("contentDiv");
-                contentDiv.innerHTML = "";
+                if(videos.length === 0) {
+                    contentDiv.innerHTML = "No recordings to download.";
+                } else {
+                    contentDiv.innerHTML = "";
+                }
+                
                 for(var i = videos.length - 1; i >= 0; i--) {
                     // innerhtml = innerhtml + "<div class=\"download-item\">" +
                     //                             "<div class=\"download-itemTitle\">" + videos[i][1].title + "</div>" +
@@ -155,6 +167,44 @@ document.addEventListener('DOMContentLoaded', function() {
                     removeBtn.id = "removeBtn" + i;
                     removeBtn.classList.add("btn", "btn-danger");
                     removeBtn.innerText = "Remove";
+
+                    removeBtn.addEventListener("click", function(e) {
+                        // console.log("index", index);
+                        // console.log(isEmptyObject(result));
+                        // console.log(result);
+                        // console.log("Here: ", e.target.id);
+                        var removeButtonID = e.target.id;
+                        var index = parseInt(removeButtonID[removeButtonID.length - 1]);
+                        // console.log("Download videos: ", videoObjects);
+                        var remove = videoObjects[index];//video to download
+
+                        var found = false;
+                        var newVideosObject = new Object();
+                        if (videos.length !== 1) {
+                            for(var j = 0; j < videos.length-1; j++) {
+                                if(j===index) {
+                                    found = true;
+                                }
+    
+                                if(found) {
+                                    newVideosObject[j] = videoObjects[j+1];
+                                } else {
+                                    newVideosObject[j] = videoObjects[j];
+                                }
+                            }
+                        } else {
+                            chrome.storage.local.remove('video');
+                            chrome.storage.local.remove('videos');
+                        }
+                        
+                        //updates videos in storage
+                        chrome.storage.local.set({ 
+                            'videos': newVideosObject
+                        }, function() {
+                            console.log("Videos object successfully updated and stored to local storage!");
+                            getVideos();
+                        });                                
+                    });
 
                     downloadItemBtns.appendChild(downloadBtn);
                     downloadItemBtns.appendChild(removeBtn);

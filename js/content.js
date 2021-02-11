@@ -81,6 +81,7 @@ if (videoRec === null || videoRec === undefined) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
     const pip = request.pip;
+    console.log("PiP  ", request);
     if(pip) {
         document.getElementById(videoSelector).requestPictureInPicture();
         console.log("PIP Request Sent");

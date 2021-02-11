@@ -80,7 +80,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     "pip": true
                 });
             });
-            e.target.innerText = "Leave Picture-in-Picture Mode";
+            if(e.target.innerText.localeCompare("Leave Picture-in-Picture Mode") === 0) {
+                e.target.innerText = "Enter Picture-in-Picture Mode";
+                e.target.classList.remove("btn-danger");
+                e.target.classList.add("btn-primary");
+            } else {
+                e.target.innerText = "Leave Picture-in-Picture Mode";
+                e.target.classList.remove("btn-primary");
+                e.target.classList.add("btn-danger");
+            }
         });
 
         pipDiv.appendChild(pipBtn);

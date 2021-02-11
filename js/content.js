@@ -83,7 +83,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
     const pip = request.pip;
     console.log("PiP  ", request);
     if(pip) {
-        document.getElementById(videoSelector).requestPictureInPicture();
+        if(document.pictureInPictureElement) {
+            document.exitPictureInPicture().catch(err => {
+                console.log(err);
+            });
+            return;
+        }
+        document.getElementById(videoSelector).requestPictureInPicture().catch(err => {
+            console.log(err);
+        });
         console.log("PIP Request Sent");
     }
 });

@@ -37,7 +37,15 @@ document.addEventListener('DOMContentLoaded', function() {
     //////////////////////////////////////////////////////////////////////
     
     /////////////////Adding Click Listeners to the Tabs///////////////////
-    document.getElementById("pip").onclick = onPiP;
+    chrome.tabs.getSelected(null, function(tab) {
+        var tabUrl = tab.url;
+        var regex = /^https:\/\/ca\.bbcollab\.com\/collab\/ui\/session\/playback/;
+        if(regex.test(tabUrl)) {
+            document.getElementById("pip").onclick = onPiP;
+        }
+        // console.log("enableButton", enableButton);
+    });
+    // document.getElementById("pip").onclick = onPiP;
     var downloadsTab = document.getElementById("downloads");
     var firstLoad = true;
     downloadsTab.classList.add("active");
@@ -81,7 +89,9 @@ document.addEventListener('DOMContentLoaded', function() {
         pipDiv.id = "pipDiv";
 
         var pipBtn = document.createElement("button");
+        var enableButton = null;
 
+        console.log("enableButton", enableButton);
         chrome.storage.local.get(['pip'], function(result) {
             if(isEmptyObject(result)) {
                 chrome.storage.local.set({ 

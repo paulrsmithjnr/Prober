@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var regex = /^https:\/\/ca\.bbcollab\.com\/collab\/ui\/session\/playback/;
         if(regex.test(tabUrl)) {
             document.getElementById("pip").onclick = onPiP;
+        } else {
+            document.getElementById("pip").classList.add("disabled");
         }
         // console.log("enableButton", enableButton);
     });

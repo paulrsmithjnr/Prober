@@ -93,5 +93,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse){
             console.log(err);
         });
         console.log("PIP Request Sent");
+        document.getElementById(videoSelector).addEventListener("leavepictureinpicture", e => {
+            chrome.storage.local.set({ 
+                'pip': false
+            }, function() {
+                console.log("Updating PiP Mode");
+            });
+        });
     }
 });

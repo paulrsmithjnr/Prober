@@ -1,5 +1,3 @@
-//TODO: Work on PiP functionality. Can maybe send a message from popup script to 
-//content script with a boolean value or some other way of requesting pip.
 document.addEventListener('DOMContentLoaded', function() {
     var video = null;
     var timerId = null;
@@ -12,15 +10,30 @@ document.addEventListener('DOMContentLoaded', function() {
     var yyyy = today.getFullYear();
     today = mm + '/' + dd + '/' + yyyy;
 
-    chrome.storage.local.get(['today'], function(result) { 
-        if (today.localeCompare(result.today) !== 0) {
-            chrome.storage.local.remove('videos');
-            chrome.storage.local.remove('video');
+    // chrome.storage.local.remove('videos');
+    // chrome.storage.local.remove('video');
+    chrome.storage.local.get(['videos'], function(result) {    
+        if (isEmptyObject(result)) {
+            createVideosObject();
+        } else {
+            var videos = result.videos;
+            var updatedVideos = new Object();
+            var currentVideosArray = Object.entries(videos);
+            var index = 0;
+            for (var i = 0; i < currentVideosArray.length; i++) {
+                if(videos[i].dateAdded.localeCompare(today) === 0) {
+                    updatedVideos[index] = videos[i];
+                    index++;
+                }
+            }
             chrome.storage.local.set({ 
-                'today': today
+                'videos': updatedVideos
+            }, function() {
+                console.log("Videos object successfully updated and stored to local storage!");
             });
-        } 
+        }
     });
+
     //////////////////////////////////////////////////////////////////////
     
     /////////////////Adding Click Listeners to the Tabs///////////////////
@@ -123,23 +136,41 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                 }
+
+                var dateAdded = new Date();
+                var dd = String(dateAdded.getDate()).padStart(2, '0');
+                var mm = String(dateAdded.getMonth() + 1).padStart(2, '0');
+                var yyyy = dateAdded.getFullYear();
+                dateAdded = mm + '/' + dd + '/' + yyyy;
                 
                 var length = Object.entries(videos).length;
                 video['id'] = length;
+                video['dateAdded'] = dateAdded;
                 videos[length] = video;
                 chrome.storage.local.set({ 
                     'videos': videos
                 }, function() {
                     console.log("Videos object successfully updated and stored to local storage!");
+                    chrome.storage.local.remove('video');
+                    video = null;
                 });
             }
         });
     }
 
     function createVideosObject() {
+        var dateAdded = new Date();
+        var dd = String(dateAdded.getDate()).padStart(2, '0');
+        var mm = String(dateAdded.getMonth() + 1).padStart(2, '0');
+        var yyyy = dateAdded.getFullYear();
+        dateAdded = mm + '/' + dd + '/' + yyyy;
+
         var videos = new Object();
-        video['id'] = 0;
-        videos[0] = video;
+        if(video !== null && video !== undefined) {
+            video['id'] = 0;
+            video['dateAdded'] = dateAdded;
+            videos[0] = video;
+        }
         chrome.storage.local.set({ 
             'videos': videos
         }, function() {

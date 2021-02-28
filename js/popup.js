@@ -244,11 +244,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     var downloadBtn = document.createElement("button");
                     if(videos[i][1].downloaded) {
                         downloadItemTitle.classList.add("download-itemTitle");
-                        downloadBtn.classList.add("btn", "btn-primary");
+                        downloadBtn.classList.add("btn", "btn-outline-primary");
                         downloadBtn.innerText = "Download Again";
                     } else {
                         downloadItemTitle.classList.add("download-itemTitle", "bold");
-                        downloadBtn.classList.add("btn", "btn-success");
+                        downloadBtn.classList.add("btn", "btn-outline-success");
                         downloadBtn.innerText = "Download";
                     }
                     downloadItemTitle.innerText = videos[i][1].title;
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     var removeBtn = document.createElement("button");
                     removeBtn.id = "removeBtn" + i;
-                    removeBtn.classList.add("btn", "btn-danger");
+                    removeBtn.classList.add("btn", "btn-outline-danger");
                     removeBtn.innerText = "Remove";
 
                     removeBtn.addEventListener("click", function(e) {

@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     addVideo();
                 }
         
-                timerId = setInterval(getVideos, 500);
+                timerId = setInterval(getVideos, 250);
         
             });
         }
@@ -81,27 +81,57 @@ document.addEventListener('DOMContentLoaded', function() {
         pipDiv.id = "pipDiv";
 
         var pipBtn = document.createElement("button");
-        pipBtn.classList.add("btn", "btn-primary");
-        pipBtn.innerText = "Enter Picture-in-Picture Mode";
 
+        chrome.storage.local.get(['pip'], function(result) {
+            if(isEmptyObject(result)) {
+                chrome.storage.local.set({ 
+                    'pip': false
+                }, function() {
+                    console.log("Saving PiP Mode");
+                });
+
+                pipBtn.classList.add("btn", "btn-primary");
+                pipBtn.innerText = "Enter Picture-in-Picture Mode";
+
+            } else {
+
+                if(result.pip === false) {
+                    pipBtn.classList.add("btn", "btn-primary");
+                    pipBtn.innerText = "Enter Picture-in-Picture Mode";
+                } else {
+                    pipBtn.classList.add("btn", "btn-danger");
+                    pipBtn.innerText = "Leave Picture-in-Picture Mode";
+                }
+            }
+        });
+
+        
+        
         pipBtn.addEventListener("click", function(e) {
-            // chrome.runtime.sendMessage({
-            //     "pip": true
-            // });
+            if(e.target.innerText.localeCompare("Leave Picture-in-Picture Mode") === 0) {
+                e.target.innerText = "Enter Picture-in-Picture Mode";
+                e.target.classList.remove("btn-danger");
+                e.target.classList.add("btn-primary");
+                chrome.storage.local.set({ 
+                    'pip': false
+                }, function() {
+                    console.log("Updating PiP Mode");
+                });
+            } else {
+                e.target.innerText = "Leave Picture-in-Picture Mode";
+                e.target.classList.remove("btn-primary");
+                e.target.classList.add("btn-danger");
+                chrome.storage.local.set({ 
+                    'pip': true
+                }, function() {
+                    console.log("Updating PiP Mode");
+                });
+            }
             chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
                 chrome.tabs.sendMessage(tabs[0].id, {
                     "pip": true
                 });
             });
-            if(e.target.innerText.localeCompare("Leave Picture-in-Picture Mode") === 0) {
-                e.target.innerText = "Enter Picture-in-Picture Mode";
-                e.target.classList.remove("btn-danger");
-                e.target.classList.add("btn-primary");
-            } else {
-                e.target.innerText = "Leave Picture-in-Picture Mode";
-                e.target.classList.remove("btn-primary");
-                e.target.classList.add("btn-danger");
-            }
         });
 
         pipDiv.appendChild(pipBtn);

@@ -42,8 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var pipTab = document.getElementById("pip");
     chrome.tabs.getSelected(null, function(tab) {
         var tabUrl = tab.url;
-        var regex = /^https:\/\/ca\.bbcollab\.com\/collab\/ui\/session\/playback/;
-        if(regex.test(tabUrl)) {
+        // var regex = /^https:\/\/ca\.bbcollab\.com\/collab\/ui\/session\/playback/;
+        var test = "https://ca.bbcollab.com/collab/ui/session/playback";
+        // if(regex.test(tabUrl)) {
+        if(test.localeCompare(tabUrl) === 0) {
             pipTab.onclick = onPiP;
         } else {
             pipTab.classList.add("disabled");

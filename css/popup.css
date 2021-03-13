@@ -50,6 +50,11 @@ img {
     text-justify: inter-word;
 }
 
+#ss1,#ss2 {
+    width: 450px;
+    height: auto;
+}
+
 #pipDiv {
     padding: 20px;
     display: flex;

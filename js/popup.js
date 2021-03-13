@@ -195,13 +195,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                 "<ul>" +
                                 "<li>Find the recording you would like to download and open it in the recording player.</li>" +
                                 "<li>Ensure the recording player has fully loaded.</li>" +
-                                "<li>Open the <b>Prober</b> popup and navigate to the <i>Downloads</i> tab. The recording will be added to the list of recordings ready to be downloaded.</li>" +
+                                "<li>Open the <b>Prober</b> popup and navigate to the <i>Downloads</i> tab. The recording will be added to the list of recordings ready to be downloaded.<br><img id=\"ss1\"src=\"../img/ss1.png\" alt=\"Downloads List\"/></li>" +
                                 "<li>There is no limit to the number of recordings that can be added to the downloads list. <b><i>Note however that the list will refresh automatically on each new day.</i></b></li>" +
                                 "</ul>" +
                                 "<br><p><u>Using PiP mode</u>:</p>" +
                                 "<ul>" +
                                 "<li>Navigate to the recording player and ensure that it has fully loaded.</li>" +
-                                "<li>Open the <b>Prober</b> popup and navigate to the <i>PiP</i> tab. There, you will find a button that you can use to toggle PiP mode.</li>" +
+                                "<li>Open the <b>Prober</b> popup and navigate to the <i>PiP</i> tab. There, you will find a button that you can use to toggle PiP mode.<br><img id=\"ss2\"src=\"../img/ss2.png\" alt=\"PiP Mode\"/></li>" +
                                 "</ul>";
         document.getElementsByClassName("mymodal-content")[0].appendChild(howToDiv);
     }

@@ -14,18 +14,11 @@
         "default_title": "Prober",
         "default_popup": "./html/popup.html"
     },
-    "content_scripts": [
-        {
-            "matches": ["*://*.bbcollab.com/*"],
-            "js": ["./js/content.js"]
-        }
-    ],
     "background": {
         "scripts": ["./js/background.js"]
     },
     "permissions": [
         "tabs",
-        "activeTab",
         "downloads",
         "storage",
         "https://ca.bbcollab.com/collab/ui/session/playback"

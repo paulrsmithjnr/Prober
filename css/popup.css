@@ -38,11 +38,16 @@ img {
     vertical-align: text-bottom;
 }
 
-#contentDiv {
+#contentDiv, #howToDiv {
     padding: 20px;
     max-height: 200px;
     overflow-x: hidden;
     overflow-y: auto;
+}
+
+#howToDiv {
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 #pipDiv {

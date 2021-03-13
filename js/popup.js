@@ -37,40 +37,53 @@ document.addEventListener('DOMContentLoaded', function() {
     //////////////////////////////////////////////////////////////////////
     
     /////////////////Adding Click Listeners to the Tabs///////////////////
+    /*PiP*/
+    //disables pip tab when not on a blackboard recording
+    var pipTab = document.getElementById("pip");
     chrome.tabs.getSelected(null, function(tab) {
         var tabUrl = tab.url;
         var regex = /^https:\/\/ca\.bbcollab\.com\/collab\/ui\/session\/playback/;
         if(regex.test(tabUrl)) {
-            document.getElementById("pip").onclick = onPiP;
+            pipTab.onclick = onPiP;
         } else {
-            document.getElementById("pip").classList.add("disabled");
+            pipTab.classList.add("disabled");
         }
-        // console.log("enableButton", enableButton);
     });
-    // document.getElementById("pip").onclick = onPiP;
+
+    /*Downloads*/
     var downloadsTab = document.getElementById("downloads");
     var firstLoad = true;
     downloadsTab.classList.add("active");
     downloadsTab.onclick = onDownloads;
+
+    /*How To Use*/
+    var howToTab = document.getElementById("howto");
+    howToTab.onclick = onHowTo;
     //////////////////////////////////////////////////////////////////////
 
     onDownloads();//starts everything - loads the downloads tab on popup
 
 
     function onDownloads() {
-        if (downloadsTab.classList.contains("active") && !firstLoad) {
-            return;
+        if (downloadsTab.classList.contains("active") && !firstLoad) {//if this is not the first time loading the download tab while the popup has been up...
+            return; //leave this function if this tab is already active
         } else {
             firstLoad = false;
+
+            //disables currently active tab that is not the downloads tab
+            if(pipTab.classList.contains("active")) {
+                pipTab.classList.remove("active");
+                document.getElementById("pipDiv").remove();
+            } else if(howToTab.classList.contains("active")) {
+                howToTab.classList.remove("active");
+                document.getElementById("howToDiv").remove();
+            }
+
             var contentDiv = document.createElement("div");
             contentDiv.id = "contentDiv";
-            var pipDiv = document.getElementById("pipDiv");
-            if (pipDiv != null || pipDiv != undefined) {
-                pipDiv.remove();
-            }
+        
             document.getElementsByClassName("mymodal-content")[0].appendChild(contentDiv);
-            document.getElementById("downloads").classList.add("active");
-            document.getElementById("pip").classList.remove("active");
+            downloadsTab.classList.add("active");
             chrome.storage.local.get(['video'], function(result) {
                 video = result.video;
                 if(!isEmptyObject(result)) {
@@ -84,16 +97,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function onPiP() {
-        document.getElementById("contentDiv").remove();
-        document.getElementById("downloads").classList.remove("active");
-        document.getElementById("pip").classList.add("active");
+        //disables currently active tab that is not the pip tab
+        if (pipTab.classList.contains("active")) { //if the pip tab is already active...
+            return; //leave this function if this tab is already active
+        } else if (downloadsTab.classList.contains("active")) {
+            document.getElementById("contentDiv").remove();
+            downloadsTab.classList.remove("active");
+        } else if (howToTab.classList.contains("active")) {
+            howToTab.classList.remove("active");
+            document.getElementById("howToDiv").remove();
+        }
+
+        //makes the pip tab active and adds the necessary html elements
+        pipTab.classList.add("active");
         var pipDiv = document.createElement("div");
         pipDiv.id = "pipDiv";
 
         var pipBtn = document.createElement("button");
-        var enableButton = null;
 
-        console.log("enableButton", enableButton);
         chrome.storage.local.get(['pip'], function(result) {
             if(isEmptyObject(result)) {
                 chrome.storage.local.set({ 
@@ -150,6 +171,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementsByClassName("mymodal-content")[0].appendChild(pipDiv);
 
+    }
+
+    function onHowTo() {
+        if(howToTab.classList.contains("active")) {
+            return; //leave this function if this tab is already active
+        } else if(downloadsTab.classList.contains("active")) {
+            document.getElementById("contentDiv").remove();
+            downloadsTab.classList.remove("active");
+        } else if(pipTab.classList.contains("active")) {
+            document.getElementById("pipDiv").remove();
+            pipTab.classList.remove("active");
+        }
+
+        howToTab.classList.add("active");
+        var howToDiv = document.createElement("div");
+        howToDiv.id = "howToDiv";
+
+        howToDiv.innerHTML = "<p><b>Prober</b> is an easy-to-use tool for downloading BlackBoard Collaborate virtual classroom recordings. <b>Prober</b> also features an in-browser Picture-in-Picture functionality so that you can keep an eye on what you are watching while interacting with other sites and applications.</p>" +
+                                "<br><p><u>Downloading recordings</u>:</p>" +
+                                "<ul>" +
+                                "<li>Find the recording you would like to download and open it in the recording player.</li>" +
+                                "<li>Ensure the recording player has fully loaded.</li>" +
+                                "<li>Open the <b>Prober</b> popup and navigate to the <i>Downloads</i> tab. The recording will be added to the list of recordings ready to be downloaded.</li>" +
+                                "<li>There is no limit to the number of recordings that can be added to the downloads list. <b><i>Note however that the list will refresh automatically on each new day.</i></b></li>" +
+                                "</ul>" +
+                                "<br><p><u>Using PiP mode</u>:</p>" +
+                                "<ul>" +
+                                "<li>Navigate to the recording player and ensure that it has fully loaded.</li>" +
+                                "<li>Open the <b>Prober</b> popup and navigate to the <i>PiP</i> tab. There, you will find a button that you can use to toggle PiP mode.</li>" +
+                                "</ul>";
+        document.getElementsByClassName("mymodal-content")[0].appendChild(howToDiv);
     }
 
     function isEmptyObject(object) {

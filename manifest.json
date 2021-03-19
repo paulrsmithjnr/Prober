@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Prober",
     "description": "Easily download Blackboard Collaborate recordings.",
-    "version": "1.0",
+    "version": "1.1",
     "icons": {
         "16": "./img/icons/prober_colour-16x16.png",
         "32": "./img/icons/prober_colour-32x32.png",
